@@ -16,6 +16,8 @@ import com.delazari.java_spring_api.entities.dtos.CardDTO;
 import com.delazari.java_spring_api.entities.services.CardServices;
 import com.delazari.java_spring_api.repositories.CardRepository;
 
+import jakarta.validation.ConstraintViolationException;
+
 @Service
 public class CardServiceImpl implements CardServices{
 	
@@ -31,7 +33,9 @@ public class CardServiceImpl implements CardServices{
 			created = cardRepository.save(create);
 		} catch (DataIntegrityViolationException e) {
 			throw new IllegalArgumentException("There is a card with the same name already registered.");
-		}
+		} catch (ConstraintViolationException e) {
+			throw new IllegalArgumentException("The value of the Name field is invalid.");
+		} 
 		return mapToCardDTO(created);
 	}
 

@@ -1,11 +1,11 @@
 package com.delazari.java_spring_api.services;
 
+import static com.delazari.java_spring_api.communs.CardConstants.INVALID_CARD_EMPTY_NAME_FIELD;
 import static com.delazari.java_spring_api.communs.CardConstants.VALID_CARD_ID_1L;
 import static com.delazari.java_spring_api.communs.CardConstants.VALID_CARD_ID_NULL;
-import static com.delazari.java_spring_api.communs.CardConstants.INVALID_CARD_EMPTY_NAME_FIELD;
+import static com.delazari.java_spring_api.communs.CardDTOConstants.INVALID_CARDDTO_EMPTY_NAME_FIELD;
 import static com.delazari.java_spring_api.communs.CardDTOConstants.VALID_CARDDTO_ID_1L;
 import static com.delazari.java_spring_api.communs.CardDTOConstants.VALID_CARDDTO_ID_NULL;
-import static com.delazari.java_spring_api.communs.CardDTOConstants.INVALID_CARDDTO_EMPTY_NAME_FIELD;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import com.delazari.java_spring_api.entities.dtos.CardDTO;
 import com.delazari.java_spring_api.entities.services.impl.CardServiceImpl;
@@ -39,9 +40,15 @@ public class CardServiceImplTest {
 	}
 	
 	@Test
-	public void createCard_WithInvalidData_ThrowsBlankFieldException() {
+	public void createCard_WithEmptyName_ThrowsConstraintViolationException() {
 		when(cardRepository.save(INVALID_CARD_EMPTY_NAME_FIELD)).thenThrow(ConstraintViolationException.class);
-		assertThatThrownBy(()-> cardServiceImpl.create(INVALID_CARDDTO_EMPTY_NAME_FIELD)).isInstanceOf(ConstraintViolationException.class);
+		assertThatThrownBy(()-> cardServiceImpl.create(INVALID_CARDDTO_EMPTY_NAME_FIELD)).isInstanceOf(IllegalArgumentException.class);
+	}
+	
+	@Test
+	public void createCard_WithSameName_ThrowConstraintViolationException() {
+		when(cardRepository.save(VALID_CARD_ID_NULL)).thenThrow(DataIntegrityViolationException.class);
+		assertThatThrownBy(()-> cardServiceImpl.create(VALID_CARDDTO_ID_NULL)).isInstanceOf(IllegalArgumentException.class);
 	}
 
 }
