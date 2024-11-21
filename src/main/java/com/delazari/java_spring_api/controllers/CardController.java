@@ -25,8 +25,8 @@ public class CardController {
 	private CardServices cardService;
 	
 	@PostMapping
-	public ResponseEntity<CardDTO> createCard(@RequestBody CardDTO cardDTO) {
-		return new ResponseEntity<>(cardService.create(cardDTO), HttpStatus.CREATED);
+	public ResponseEntity<CardDTO> createCard(@RequestBody CardDTO cardDto) {
+		return new ResponseEntity<>(cardService.create(cardDto), HttpStatus.CREATED);
 	}
 	
 	@GetMapping(value = "/{id}")
