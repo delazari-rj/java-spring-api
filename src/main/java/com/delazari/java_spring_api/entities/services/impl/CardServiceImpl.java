@@ -1,12 +1,13 @@
 package com.delazari.java_spring_api.entities.services.impl;
 
-import java.util.List;
-import java.util.Optional;
-
 import static com.delazari.java_spring_api.mappers.CardMapper.mapToCard;
 import static com.delazari.java_spring_api.mappers.CardMapper.mapToCardDTO;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,12 @@ public class CardServiceImpl implements CardServices{
 	@Transactional
 	public CardDTO create(CardDTO cardDto) {
 		Card create = mapToCard(cardDto);
-		Card created = cardRepository.save(create);
+		Card created;
+		try {
+			created = cardRepository.save(create);
+		} catch (DataIntegrityViolationException e) {
+			throw new IllegalArgumentException("There is a card with the same name already registered.");
+		}
 		return mapToCardDTO(created);
 	}
 

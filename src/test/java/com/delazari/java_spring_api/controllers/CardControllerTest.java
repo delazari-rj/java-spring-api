@@ -1,4 +1,4 @@
-package com.delazari.java_spring_api.controller;
+package com.delazari.java_spring_api.controllers;
 
 import static com.delazari.java_spring_api.communs.CardDTOConstants.VALID_CARDDTO_ID_1L;
 import static com.delazari.java_spring_api.communs.CardDTOConstants.VALID_CARDDTO_ID_NULL;
@@ -16,7 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.delazari.java_spring_api.controllers.CardController;
 import com.delazari.java_spring_api.entities.services.CardServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

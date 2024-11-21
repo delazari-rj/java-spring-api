@@ -1,7 +1,7 @@
 package com.delazari.java_spring_api.repositories;
 
-import static com.delazari.java_spring_api.communs.CardConstants.INVALID_CARDDTO_EMPTY_NAME_FIELD;
-import static com.delazari.java_spring_api.communs.CardConstants.INVALID_CARDDTO_NULL;
+import static com.delazari.java_spring_api.communs.CardConstants.INVALID_CARD_EMPTY_NAME_FIELD;
+import static com.delazari.java_spring_api.communs.CardConstants.INVALID_CARD_NULL;
 import static com.delazari.java_spring_api.communs.CardConstants.VALID_CARD_ID_NULL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -38,20 +38,18 @@ public class CardRepositoryTest {
 	
 	@Test
 	public void createCard_WithTheSameName_ReturnDataIntegrityViolationException() {
-		Card card = testEntityManager.persistAndFlush(VALID_CARD_ID_NULL);
-		testEntityManager.detach(card);
-		card.setId(null);
-		
-		assertThatThrownBy(() -> cardRepository.save(card)).isInstanceOf(DataIntegrityViolationException.class);
+		// TODO Refecture this test to use testEntityManager
+		cardRepository.save(VALID_CARD_ID_NULL);		
+		assertThatThrownBy(() -> cardRepository.save(VALID_CARD_ID_NULL)).isInstanceOf(DataIntegrityViolationException.class);
 	}
 	
 	@Test
 	public void createCard_CardNull_ReturnConstraintViolationException() {
-		assertThatThrownBy(() -> cardRepository.save(INVALID_CARDDTO_NULL)).isInstanceOf(ConstraintViolationException.class);
+		assertThatThrownBy(() -> cardRepository.save(INVALID_CARD_NULL)).isInstanceOf(ConstraintViolationException.class);
 	}
 	
 	@Test
 	public void createCard_InvalidData_ReturnException() {
-		assertThatThrownBy(() -> cardRepository.save(INVALID_CARDDTO_EMPTY_NAME_FIELD)).isInstanceOf(ConstraintViolationException.class);;
+		assertThatThrownBy(() -> cardRepository.save(INVALID_CARD_EMPTY_NAME_FIELD)).isInstanceOf(ConstraintViolationException.class);;
 	}
 }
