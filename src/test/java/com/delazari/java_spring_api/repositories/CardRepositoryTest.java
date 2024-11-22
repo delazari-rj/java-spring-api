@@ -6,12 +6,15 @@ import static com.delazari.java_spring_api.communs.CardConstants.VALID_CARD_ID_N
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.NoSuchElementException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 import com.delazari.java_spring_api.entities.Card;
 
@@ -32,7 +35,7 @@ public class CardRepositoryTest {
 	}
 	
 	@Test
-	public void createCard_ValidData_ReturnCard() {
+	public void create_WithValidData_ReturnCard() {
 		Card card = cardRepository.save(VALID_CARD_ID_NULL);
 		
 		Card sut = testEntityManager.find(Card.class, card.getId());
@@ -43,7 +46,7 @@ public class CardRepositoryTest {
 	}
 	
 	@Test
-	public void createCard_WithTheSameName_ReturnDataIntegrityViolationException() {
+	public void create_WithTheExistingName_ReturnDataIntegrityViolationException() {
 		Card card = testEntityManager.persistAndFlush(VALID_CARD_ID_NULL);
 		testEntityManager.detach(card);
 		card.setId(null);
@@ -52,12 +55,35 @@ public class CardRepositoryTest {
 	}
 	
 	@Test
-	public void createCard_CardNull_ReturnConstraintViolationException() {
+	public void create_WithTheNullObject_ReturnConstraintViolationException() {
 		assertThatThrownBy(() -> cardRepository.save(INVALID_CARD_NULL)).isInstanceOf(ConstraintViolationException.class);
 	}
 	
 	@Test
-	public void createCard_InvalidData_ReturnException() {
-		assertThatThrownBy(() -> cardRepository.save(INVALID_CARD_EMPTY_NAME_FIELD)).isInstanceOf(ConstraintViolationException.class);;
+	public void create_WithTheNameNull_ReturnConstraintViolationException() {
+		assertThatThrownBy(() -> cardRepository.save(INVALID_CARD_EMPTY_NAME_FIELD)).isInstanceOf(ConstraintViolationException.class);
+	}
+	
+	@Test
+	public void findById_WithValidIID_ReturnCard() {
+		Card card = testEntityManager.persistAndFlush(VALID_CARD_ID_NULL);
+		
+		Card sut = cardRepository.findById(card.getId()).get();
+		
+		assertThat(sut).isEqualTo(card);
+	}
+	
+	@Test
+	public void findById_WithIdNotFound_ReturnNoSuchElementException() {
+		testEntityManager.persistAndFlush(VALID_CARD_ID_NULL);
+		
+		assertThatThrownBy(() -> cardRepository.findById(2L).get()).isInstanceOf(NoSuchElementException.class);
+	}
+	
+	@Test
+	public void findById_WithNullId_ReturnNoSuchElementException() {
+		testEntityManager.persistAndFlush(VALID_CARD_ID_NULL);
+		
+		assertThatThrownBy(() -> cardRepository.findById(null).get()).isInstanceOf(InvalidDataAccessApiUsageException.class);
 	}
 }
