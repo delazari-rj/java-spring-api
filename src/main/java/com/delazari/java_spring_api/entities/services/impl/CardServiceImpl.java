@@ -27,10 +27,9 @@ public class CardServiceImpl implements CardServices{
 	@Override
 	@Transactional
 	public CardDTO create(CardDTO cardDto) {
-		Card create = mapToCard(cardDto);
 		Card created;
 		try {
-			created = cardRepository.save(create);
+			created = cardRepository.save(mapToCard(cardDto));
 		} catch (DataIntegrityViolationException e) {
 			throw new IllegalArgumentException("There is a card with the same name already registered.");
 		} catch (ConstraintViolationException e) {

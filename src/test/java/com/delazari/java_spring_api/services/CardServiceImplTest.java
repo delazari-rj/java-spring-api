@@ -41,14 +41,18 @@ public class CardServiceImplTest {
 	
 	@Test
 	public void createCard_WithEmptyName_ThrowsConstraintViolationException() {
-		when(cardRepository.save(INVALID_CARD_EMPTY_NAME_FIELD)).thenThrow(ConstraintViolationException.class);
-		assertThatThrownBy(()-> cardServiceImpl.create(INVALID_CARDDTO_EMPTY_NAME_FIELD)).isInstanceOf(IllegalArgumentException.class);
+		when(cardRepository.save(INVALID_CARD_EMPTY_NAME_FIELD))
+			.thenThrow(ConstraintViolationException.class);
+		assertThatThrownBy(()-> cardServiceImpl.create(INVALID_CARDDTO_EMPTY_NAME_FIELD))
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 	
 	@Test
 	public void createCard_WithSameName_ThrowConstraintViolationException() {
-		when(cardRepository.save(VALID_CARD_ID_NULL)).thenThrow(DataIntegrityViolationException.class);
-		assertThatThrownBy(()-> cardServiceImpl.create(VALID_CARDDTO_ID_NULL)).isInstanceOf(IllegalArgumentException.class);
+		when(cardRepository.save(VALID_CARD_ID_NULL))
+			.thenThrow(DataIntegrityViolationException.class);
+		assertThatThrownBy(()-> cardServiceImpl.create(VALID_CARDDTO_ID_NULL))
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 
 }

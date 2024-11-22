@@ -6,6 +6,7 @@ import static com.delazari.java_spring_api.communs.CardConstants.VALID_CARD_ID_N
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -25,6 +26,11 @@ public class CardRepositoryTest {
 	@Autowired
 	private TestEntityManager testEntityManager;
 	
+	@BeforeEach
+	public void init() {
+		VALID_CARD_ID_NULL.setId(null);
+	}
+	
 	@Test
 	public void createCard_ValidData_ReturnCard() {
 		Card card = cardRepository.save(VALID_CARD_ID_NULL);
@@ -38,9 +44,11 @@ public class CardRepositoryTest {
 	
 	@Test
 	public void createCard_WithTheSameName_ReturnDataIntegrityViolationException() {
-		// TODO Refecture this test to use testEntityManager
-		cardRepository.save(VALID_CARD_ID_NULL);		
-		assertThatThrownBy(() -> cardRepository.save(VALID_CARD_ID_NULL)).isInstanceOf(DataIntegrityViolationException.class);
+		Card card = testEntityManager.persistAndFlush(VALID_CARD_ID_NULL);
+		testEntityManager.detach(card);
+		card.setId(null);
+		
+		assertThatThrownBy(() -> cardRepository.save(card)).isInstanceOf(DataIntegrityViolationException.class);
 	}
 	
 	@Test
