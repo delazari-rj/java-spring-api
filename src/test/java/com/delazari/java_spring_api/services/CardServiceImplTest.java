@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,6 +32,11 @@ public class CardServiceImplTest {
 	
 	@Mock
 	private CardRepository cardRepository;
+	
+	@BeforeEach
+	public void init() {
+		VALID_CARD_ID_NULL.setId(null);
+	}
 	
 	@Test
 	public void createCard_WithValidData_ReturnCard() {

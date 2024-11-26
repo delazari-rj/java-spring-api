@@ -65,7 +65,7 @@ public class Card {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name);
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class Card {
 		if (getClass() != obj.getClass())
 			return false;
 		Card other = (Card) obj;
-		return Objects.equals(name.toUpperCase(), other.name.toUpperCase());
+		return Objects.equals(id, other.id);
 	}
 
 	@Override

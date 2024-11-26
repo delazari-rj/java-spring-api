@@ -1,10 +1,10 @@
 package com.delazari.java_spring_api.repositories;
 
 import static com.delazari.java_spring_api.communs.CardConstants.INVALID_CARD_EMPTY_NAME_FIELD;
-import static com.delazari.java_spring_api.communs.CardConstants.INVALID_CARD_NULL;
 import static com.delazari.java_spring_api.communs.CardConstants.INVALID_CARD_LONG_NAME_FIELD;
+import static com.delazari.java_spring_api.communs.CardConstants.INVALID_CARD_NULL;
 import static com.delazari.java_spring_api.communs.CardConstants.VALID_CARD_ID_NULL;
-
+import static com.delazari.java_spring_api.communs.CardConstants.VALID_CARD_UPDATED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -37,7 +37,7 @@ public class CardRepositoryTest {
 		VALID_CARD_ID_NULL.setId(null);
 	}
 	
-	//LIST OF CREATION TESTS.
+	//*** CREATION INTEGRATION TESTS. ***
 	
 	@Test
 	public void create_WithValidData_ReturnCard() {
@@ -45,7 +45,7 @@ public class CardRepositoryTest {
 		
 		Card sut = testEntityManager.find(Card.class, card.getId());
 		
-		assertThat(sut).isNotNull();
+		assertThat(sut.getId()).isEqualTo(card.getId());
 		assertThat(sut.getName()).isEqualTo(card.getName());
 		assertThat(sut.getDescription()).isEqualTo(card.getDescription());
 	}
@@ -74,7 +74,7 @@ public class CardRepositoryTest {
 		assertThatThrownBy(() -> cardRepository.save(INVALID_CARD_LONG_NAME_FIELD)).isInstanceOf(DataIntegrityViolationException.class);
 	}
 	
-	//LIST OF FIND TESTS
+	//*** FIND INTEGRATION TESTS ***
 	
 	@Test
 	public void findById_WithValidID_ReturnCard() {
@@ -99,7 +99,7 @@ public class CardRepositoryTest {
 		assertThatThrownBy(() -> cardRepository.findById(null).get()).isInstanceOf(InvalidDataAccessApiUsageException.class);
 	}
 	
-	//LIST OF DELETE TESTS
+	//*** DELETE INTEGRATION TESTS ***
 	
 	@Test
 	public void deleteById_WithValidID_ReturnVoid() {
@@ -113,5 +113,16 @@ public class CardRepositoryTest {
 		testEntityManager.persistAndFlush(VALID_CARD_ID_NULL);
 		
 		assertThatThrownBy(() -> cardRepository.deleteById(null)).isInstanceOf(InvalidDataAccessApiUsageException.class);
+	}
+	
+	//*** UPDATE INTEGRATION TESTS ***
+	
+	@Test
+	public void update_WithValidID_ReturnCard() {
+		testEntityManager.persistAndFlush(VALID_CARD_ID_NULL);
+		
+		Card sut = cardRepository.save(VALID_CARD_UPDATED);
+		
+		assertThat(sut).isEqualTo(VALID_CARD_UPDATED);
 	}
 }
