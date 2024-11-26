@@ -46,9 +46,9 @@ public class CardServiceImpl implements CardServices{
 		try {
 			recovered = cardRepository.findById(id).get(); 
 		} catch(NoSuchElementException e) {
-			throw new NoSuchElementException("The card id " + id + " has not been found.");
+			throw new NoSuchElementException("The card id has not been found.");
 		} catch(InvalidDataAccessApiUsageException e) {
-			throw new InvalidDataAccessApiUsageException("The null value is not valid for the Card ID.");
+			throw new InvalidDataAccessApiUsageException("The card id value is not valid.");
 		} 
 		return mapToCardDTO(recovered); 
 	}
