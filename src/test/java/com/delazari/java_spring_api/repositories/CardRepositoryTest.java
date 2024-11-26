@@ -93,7 +93,7 @@ public class CardRepositoryTest {
 	}
 	
 	@Test
-	public void findById_WithNullId_ReturnNoSuchElementException() {
+	public void findById_WithNullId_ReturnDataAccessApiUsageException() {
 		testEntityManager.persistAndFlush(VALID_CARD_ID_NULL);
 		
 		assertThatThrownBy(() -> cardRepository.findById(null).get()).isInstanceOf(InvalidDataAccessApiUsageException.class);
